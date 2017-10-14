@@ -1,0 +1,54 @@
+{
+  "Contacts": [
+    {
+      "Id": 1,
+      "FirstName": "Chris",
+      "LastName": "Cassidy",
+      "Timestamp": "2017-10-15T00:35:11.1935661+02:00",
+      "Modified": "2017-10-15T00:35:11.1935661+02:00"
+    },
+    {
+      "Id": 2,
+      "FirstName": "Anna",
+      "LastName": "Cassidy",
+      "Timestamp": "2017-10-15T00:35:11.1935661+02:00",
+      "Modified": "2017-10-15T00:35:11.1935661+02:00"
+    }
+  ],
+  "Emails": [
+    {
+      "Id": 1,
+      "ContactId": 1,
+      "Type": null,
+      "Email": "chri@cassidy.com",
+      "Timestamp": "2017-10-15T00:35:11.1945665+02:00",
+      "Modified": "2017-10-15T00:35:11.1945665+02:00"
+    },
+    {
+      "Id": 2,
+      "ContactId": 2,
+      "Type": null,
+      "Email": "anna@cassidy.com",
+      "Timestamp": "2017-10-15T00:35:11.1945665+02:00",
+      "Modified": "2017-10-15T00:35:11.1945665+02:00"
+    }
+  ],
+  "PhoneNumbers": [
+    {
+      "Id": 1,
+      "ContactId": 1,
+      "Type": null,
+      "Phone": "9876543210",
+      "Timestamp": "2017-10-15T00:35:11.1945665+02:00",
+      "Modified": "2017-10-15T00:35:11.1945665+02:00"
+    },
+    {
+      "Id": 2,
+      "ContactId": 2,
+      "Type": null,
+      "Phone": "1234567890",
+      "Timestamp": "2017-10-15T00:35:11.1945665+02:00",
+      "Modified": "2017-10-15T00:35:11.1945665+02:00"
+    }
+  ]
+}

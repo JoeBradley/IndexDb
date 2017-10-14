@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IndexDb.App_Start;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -12,6 +13,7 @@ namespace IndexDb
         protected void Application_Start()
         {
             GlobalConfiguration.Configure(WebApiConfig.Register);
+            DataStore.Init();
         }
     }
 }
