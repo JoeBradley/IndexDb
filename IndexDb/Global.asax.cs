@@ -13,7 +13,7 @@ namespace IndexDb
         protected void Application_Start()
         {
             GlobalConfiguration.Configure(WebApiConfig.Register);
-            DataStore.Init();
+            //DataStore.Init();
         }
     }
 }

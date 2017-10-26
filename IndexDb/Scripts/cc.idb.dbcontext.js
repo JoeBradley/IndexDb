@@ -9,7 +9,7 @@ define(["require", "exports", "./typings/dexie/dexie", "./models/cc.idb.models.c
             // Define tables and indexes
             //
             db.version(1).stores({
-                contacts: '++id, firstName, lastName, timestamp, modified',
+                contacts: '++id, firstName, lastName, profile, timestamp, modified',
                 emails: '++id, contactId, type, email, timestamp, modified',
                 phones: '++id, contactId, type, phone, timestamp, modified',
             });

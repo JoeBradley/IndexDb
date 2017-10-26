@@ -2,23 +2,43 @@
 import { IPhoneNumber } from './cc.idb.models.iphonenumber'
 import { db } from "../cc.idb.dbcontext";
 
+export interface IEntity {
+    id?: number;
+    modified: Date;
+    timestamp: Date;
+
+    //tableName: string;
+    //getSchema(): string;
+}
+
 /* This is a 'physical' class that is mapped to
     * the contacts table. We can have methods on it that
     * we could call on retrieved database objects.
     */
-export class Contact {
+export class Contact implements IEntity {
+    
     id: number;
-    firstName: string;
-    lastName: string;
     modified: Date;
     timestamp: Date;
 
+    firstName: string;
+    lastName: string;
+    profile: string;
+    
     emails: IEmailAddress[];
     phones: IPhoneNumber[];
 
-    constructor(first: string, last: string, id?: number) {
+    //static tableName: string = "contact";
+    //static getSchema(): string {
+    //    return "++id, firstName, lastName, profile, modified, timestamp";
+    //}
+
+    constructor(first: string, last: string, profile: string, id?: number) {
+        
         this.firstName = first;
         this.lastName = last;
+        this.profile = profile;
+
         if (id) this.id = id;
         // Define navigation properties.
         // Making them non-enumerable will prevent them from being handled by indexedDB
@@ -41,6 +61,9 @@ export class Contact {
 
             // Add or update our selves. If add, record this.id.
             this.id = await db.contacts.put(this);
+
+            this.emails.forEach((email)=>{ email.contactId = this.id; });
+            this.phones.forEach((phone)=>{ phone.contactId = this.id; });
 
             // Save all navigation properties (arrays of emails and phones)
             // Some may be new and some may be updates of existing objects.

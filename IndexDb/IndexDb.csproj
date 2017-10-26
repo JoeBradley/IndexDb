@@ -96,13 +96,39 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\styles.css" />
     <Content Include="Content\jasmine\jasmine.css" />
     <Content Include="Content\jasmine\jasmine_favicon.png" />
     <Content Include="Global.asax" />
+    <Content Include="Images\clear.png" />
+    <Content Include="Images\cloudy-scattered-showers.png" />
+    <Content Include="Images\cloudy.png" />
+    <Content Include="Images\cloudy_s_sunny.png" />
+    <Content Include="Images\fog.png" />
+    <Content Include="Images\icons\icon-128x128.png" />
+    <Content Include="Images\icons\icon-144x144.png" />
+    <Content Include="Images\icons\icon-152x152.png" />
+    <Content Include="Images\icons\icon-192x192.png" />
+    <Content Include="Images\icons\icon-256x256.png" />
+    <Content Include="Images\icons\icon-32x32.png" />
+    <Content Include="Images\ic_add_white_24px.svg" />
+    <Content Include="Images\ic_refresh_white_24px.svg" />
+    <Content Include="Images\partly-cloudy.png" />
+    <Content Include="Images\profiles\Anna.jpg" />
+    <Content Include="Images\profiles\Chris.jpg" />
+    <Content Include="Images\rain.png" />
+    <Content Include="Images\scattered-showers.png" />
+    <Content Include="Images\sleet.png" />
+    <Content Include="Images\snow.png" />
+    <Content Include="Images\thunderstorm.png" />
+    <Content Include="Images\wind.png" />
     <Content Include="Scripts\cc.idb.startup.js" />
     <Content Include="Scripts\dexie\dexie.js" />
+    <Content Include="Scripts\service.js" />
     <Content Include="Scripts\typings\dexie\dexie.js.map" />
     <Content Include="App_Data\contacts.json" />
+    <Content Include="Images\icons\Thumbs.db" />
+    <Content Include="Images\Thumbs.db" />
     <None Include="Scripts\jquery\jquery-3.2.1.intellisense.js" />
     <Content Include="Index.html" />
     <Content Include="Scripts\typings\dexie\dexie.js" />
@@ -142,8 +168,10 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <TypeScriptCompile Include="Scripts\cc.idb.syncService.ts" />
     <TypeScriptCompile Include="Scripts\cc.idb.app.ts" />
     <TypeScriptCompile Include="Scripts\cc.idb.dbcontext.ts" />
+    <Content Include="Scripts\cc.idb.ww.js" />
     <TypeScriptCompile Include="Scripts\models\cc.idb.models.contact.ts" />
     <TypeScriptCompile Include="Scripts\models\cc.idb.models.data.ts" />
     <TypeScriptCompile Include="Scripts\models\cc.idb.models.iemailaddress.ts" />

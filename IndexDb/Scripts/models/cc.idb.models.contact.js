@@ -14,9 +14,14 @@ define(["require", "exports", "../cc.idb.dbcontext"], function (require, exports
         * we could call on retrieved database objects.
         */
     class Contact {
-        constructor(first, last, id) {
+        //static tableName: string = "contact";
+        //static getSchema(): string {
+        //    return "++id, firstName, lastName, profile, modified, timestamp";
+        //}
+        constructor(first, last, profile, id) {
             this.firstName = first;
             this.lastName = last;
+            this.profile = profile;
             if (id)
                 this.id = id;
             // Define navigation properties.
@@ -39,6 +44,8 @@ define(["require", "exports", "../cc.idb.dbcontext"], function (require, exports
             return cc_idb_dbcontext_1.db.transaction('rw', cc_idb_dbcontext_1.db.contacts, cc_idb_dbcontext_1.db.emails, cc_idb_dbcontext_1.db.phones, () => __awaiter(this, void 0, void 0, function* () {
                 // Add or update our selves. If add, record this.id.
                 this.id = yield cc_idb_dbcontext_1.db.contacts.put(this);
+                this.emails.forEach((email) => { email.contactId = this.id; });
+                this.phones.forEach((phone) => { phone.contactId = this.id; });
                 // Save all navigation properties (arrays of emails and phones)
                 // Some may be new and some may be updates of existing objects.
                 // put() will handle both cases.

@@ -7,3 +7,9 @@ export interface IData {
     phoneNumbers: Array<IPhoneNumber>;
     contacts: Array<Contact>;
 }
+
+export class Data {
+    emails: Array<IEmailAddress> = [];
+    phoneNumbers: Array<IPhoneNumber> = [];
+    contacts: Array<Contact> = [];
+}

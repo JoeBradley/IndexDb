@@ -7,9 +7,9 @@ namespace IndexDb.Models
 {
     public class Data
     {
-        public List<Contact> Contacts { get; set; }
-        public List<EmailAddress> Emails { get; set; }
-        public List<PhoneNumber> PhoneNumbers { get; set; }
+        public List<Contact> Contacts { get; set; } = new List<Contact>();
+        public List<EmailAddress> Emails { get; set; } = new List<EmailAddress>();
+        public List<PhoneNumber> PhoneNumbers { get; set; } = new List<PhoneNumber>();
     }
 
     public class Contact
@@ -17,6 +17,7 @@ namespace IndexDb.Models
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string Profile { get; set; }
         public DateTime Timestamp { get; set; }
         public DateTime Modified { get; set; }
     }

@@ -14,6 +14,7 @@ namespace IndexDb.Controllers
         // GET: api/Sync
         public Data Get()
         {
+            //System.Threading.Thread.Sleep(5000);
             return DataStore.Load();
         }
 

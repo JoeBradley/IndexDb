@@ -11,7 +11,7 @@ namespace IndexDb.App_Start
     {
         public static void Init()
         {
-            var data = Load();            
+            var data = new Data();            
             Populate(ref data);
             Save(data);
         }
@@ -30,14 +30,20 @@ namespace IndexDb.App_Start
 
         private static void Populate(ref Data data)
         {
-            data.Contacts.Add(new Contact { Id = 1, FirstName = "Chris", LastName = "Cassidy", Modified = DateTime.Now, Timestamp = DateTime.Now });
-            data.Contacts.Add(new Contact { Id = 2, FirstName = "Anna", LastName = "Cassidy", Modified = DateTime.Now, Timestamp = DateTime.Now });
+            data.Contacts.Add(new Contact { Id = 1, FirstName = "Chris", LastName = "Cassidy", Profile="/Images/Profiles/Chris.jpg", Modified = DateTime.Now, Timestamp = DateTime.Now });
+            data.Contacts.Add(new Contact { Id = 2, FirstName = "Anna", LastName = "Cassidy", Profile = "/Images/Profiles/Anna.jpg", Modified = DateTime.Now, Timestamp = DateTime.Now });
 
             data.Emails.Add(new EmailAddress { Id = 1, ContactId = 1, Email = "chri@cassidy.com", Modified = DateTime.Now, Timestamp = DateTime.Now });
             data.Emails.Add(new EmailAddress { Id = 2, ContactId = 2, Email = "anna@cassidy.com", Modified = DateTime.Now, Timestamp = DateTime.Now });
 
             data.PhoneNumbers.Add(new PhoneNumber { Id = 1, ContactId = 1, Phone = "9876543210", Modified = DateTime.Now, Timestamp = DateTime.Now });
             data.PhoneNumbers.Add(new PhoneNumber { Id = 2, ContactId = 2, Phone = "1234567890", Modified = DateTime.Now, Timestamp = DateTime.Now });
+        }
+
+        private static void Clear(ref Data data) {
+            data.Contacts.Clear();
+            data.Emails.Clear();
+            data.PhoneNumbers.Clear();
         }
     }
 }

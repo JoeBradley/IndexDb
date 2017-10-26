@@ -12,56 +12,81 @@
     <meta name="apple-mobile-web-app-title" content="Indexed DB App">
     <meta name="msapplication-TileImage" content="images/icons/icon-144x144.png">
     <meta name="msapplication-TileColor" content="#2F3BA2">
-    
+
     <!-- TODO add manifest here -->
     <!--<link rel="manifest" href="manifest.json">-->
     <link rel="icon" href="images/icons/icon-32x32.png" type="image/png">
     <link rel="apple-touch-icon" href="images/icons/icon-152x152.png">
 
-    <!--<link rel="stylesheet" type="text/css" href="styles/inline.css">-->
-
-    <!-- Include Dexie -->
+    <link rel="stylesheet" type="text/css" href="content/styles.css">
     <script src="/Scripts/require.js" data-main="./scripts/cc.idb.startup.js"></script>
 </head>
 <body>
     <header class="header">
         <h1 class="header__title">Indexed DB App</h1>
-        <button id="butRefresh" class="headerButton" aria-label="Refresh"></button>
-        <button id="butAdd" class="headerButton" aria-label="Add"></button>
+        <button id="btnRefresh" class="headerButton" aria-label="Refresh"></button>
+        <button id="btnAdd" class="headerButton" aria-label="Add"></button>
+        <input id="btnPhoto" capture="user" accept="image/*" type="file" title="Photo" />
     </header>
 
     <main class="main">
-        <div id="ContactContainer">
-            </div>
+        <div id="contacts_list">
+        </div>
     </main>
-    
-    <div class="dialog-container">
-        <div class="dialog">
-            <div class="dialog-title">Add new city</div>
-            <div class="dialog-body">
-                <select id="selectCityToAdd">
-                    <!-- Values map to Yahoo Weather API Where On Earth Identifiers (WOEIDs).
-                         https://developer.yahoo.com/weather/documentation.html#req -->
-                    <option value="2357536">Austin, TX</option>
-                    <option value="2367105">Boston, MA</option>
-                    <option value="2379574">Chicago, IL</option>
-                    <option value="2459115">New York, NY</option>
-                    <option value="2475687">Portland, OR</option>
-                    <option value="2487956">San Francisco, CA</option>
-                    <option value="2490383">Seattle, WA</option>
-                </select>
+
+    <div id="contact_template" class="hidden">
+        <div class="card">
+            <div>
+                <div class="contact_profile profile-pic"></div>
             </div>
-            <div class="dialog-buttons">
-                <button id="butAddCity" class="button">Add</button>
-                <button id="butAddCancel" class="button">Cancel</button>
+            <div>
+                <div class="label">
+                    <span class="contact_firstname"></span>&nbsp;<span class="contact_lastname"></span>
+                </div>
+                <div class="contact_email label phone"></div>
+                <div class="contact_phone label email"></div>
             </div>
         </div>
     </div>
+
+    <div id="dialog" class="dialog-container">
+        <div class="dialog">
+            <div class="dialog-title">Add Contact</div>
+            <div class="dialog-body">
+                <input id="txtId" type="hidden" />
+                <div>
+                    <label>First Name</label>
+                    <input id="txtFirstName" type="text" />
+                </div>
+                <div>
+                    <label>Last Name</label>
+                    <input id="txtLastName" type="text" />
+                </div>
+                <div>
+                    <label>Profile</label>
+                    <input id="txtProfile" type="text" />
+                </div>
+                <div>
+                    <label>Emails</label>
+                    <textarea id="txtEmails" rows="3"></textarea>
+                </div>
+                <div>
+                    <label>Phone Numbers</label>
+                    <textarea id="txtPhones" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="dialog-buttons">
+                <button id="btnSave" class="button">Save</button>
+                <button id="btnCancel" class="button">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <div class="loader" hidden="true">
         <svg viewBox="0 0 32 32" width="32" height="32">
             <circle id="spinner" cx="16" cy="16" r="14" fill="none"></circle>
         </svg>
     </div>
-    
+
 </body>
 </html>
