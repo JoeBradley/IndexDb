@@ -70,13 +70,5 @@ define(["require", "exports", "../cc.idb.dbcontext"], function (require, exports
         }
     }
     exports.Contact = Contact;
-    class Data {
-        constructor() {
-            this.emails = [];
-            this.phoneNumbers = [];
-            this.contacts = [];
-        }
-    }
-    exports.Data = Data;
 });
-//# sourceMappingURL=cc.idb.models.contact.js.map
+//# sourceMappingURL=cc.idb.models.icontact.js.map

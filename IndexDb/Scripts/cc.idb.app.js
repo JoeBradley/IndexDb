@@ -1,4 +1,4 @@
-define(["require", "exports", "./cc.idb.dbcontext", "./models/cc.idb.models.data", "./models/cc.idb.models.contact", "./models/cc.idb.models.iemailaddress", "./models/cc.idb.models.iphonenumber", "jquery"], function (require, exports, cc_idb_dbcontext_1, cc_idb_models_data_1, cc_idb_models_contact_1, cc_idb_models_iemailaddress_1, cc_idb_models_iphonenumber_1, $) {
+define(["require", "exports", "jquery", "./cc.idb.dbcontext"], function (require, exports, $, model) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var cc;
@@ -10,8 +10,7 @@ define(["require", "exports", "./cc.idb.dbcontext", "./models/cc.idb.models.data
                     this.containerId = containerId;
                     this.lastSync = new Date(1970, 1, 1);
                     this.syncServiceWorker = null;
-                    console.log("App cntr");
-                    this.db = new cc_idb_dbcontext_1.DbContext();
+                    this.db = new model.DbContext();
                     this.createSyncServiceWorker();
                 }
                 init() {
@@ -21,19 +20,32 @@ define(["require", "exports", "./cc.idb.dbcontext", "./models/cc.idb.models.data
                         //console.log('then');
                     })
                         .finally(() => {
-                        //console.log('finally');
-                        this.sync();
+                        this.initPeriodicSync();
                     });
+                }
+                initPeriodicSync() {
+                    window.setTimeout(this.sync, 5000);
                 }
                 createSyncServiceWorker() {
                     try {
                         this.syncServiceWorker = new Worker('/scripts/cc.idb.ww.js');
                         this.syncServiceWorker.onmessage = (e) => {
-                            console.log('Message received from worker: ');
-                            console.log(e);
-                            this.sync();
+                            console.log('UI.onMessage: ', e);
+                            switch (e.data.action) {
+                                case 'ready':
+                                    this.sync();
+                                    //this.initPeriodicSync();
+                                    break;
+                                case 'synced':
+                                    this.rebind();
+                                    break;
+                                case 'syncing':
+                                    //this.sync();
+                                    break;
+                            }
                         };
                         this.syncServiceWorker.onerror = (e) => {
+                            console.warn('UI.onError: ');
                             console.error(e);
                         };
                     }
@@ -42,12 +54,15 @@ define(["require", "exports", "./cc.idb.dbcontext", "./models/cc.idb.models.data
                     }
                 }
                 sync() {
-                    console.log('Sync');
-                    if (this.syncServiceWorker) {
-                        console.log('Post message to SyncService');
-                        this.syncServiceWorker.postMessage('Sync');
+                    console.log('app.sync');
+                    if (typeof this.syncServiceWorker != 'undefined') {
+                        console.log('app.sync.webworker');
+                        var message = { action: 'sync' };
+                        console.log('UI: postMessage', message);
+                        this.syncServiceWorker.postMessage(message);
                     }
                     else {
+                        console.log('app.sync.ajax');
                         $.get('/api/sync', (data, status, xhr) => {
                             this.merge(data);
                             this.rebind();
@@ -98,15 +113,15 @@ define(["require", "exports", "./cc.idb.dbcontext", "./models/cc.idb.models.data
                     });
                     $('#btnSave').click(() => {
                         var id = parseInt($('#txtId').val());
-                        var contact = new cc_idb_models_contact_1.Contact($('#txtFirstName').val(), $('#txtLastName').val(), $('#txtProfile').val(), id);
+                        var contact = new model.Contact($('#txtFirstName').val(), $('#txtLastName').val(), $('#txtProfile').val(), id);
                         var emails = $('#txtEmails').val().split('\n');
-                        contact.emails = emails.map((email) => { return new cc_idb_models_iemailaddress_1.EmailAddress(email); });
+                        contact.emails = emails.map((email) => { return new model.Email(email); });
                         var phones = $('#txtPhones').val().split('\n');
-                        contact.phones = phones.map((phone) => { return new cc_idb_models_iphonenumber_1.PhoneNumber(phone); });
+                        contact.phones = phones.map((phone) => { return new model.PhoneNumber(phone); });
                         console.log("New Contact:");
                         console.log(contact);
                         contact.save();
-                        var data = new cc_idb_models_data_1.Data();
+                        var data = new model.Data();
                         data.contacts.push(contact);
                         data.emails = contact.emails;
                         data.phoneNumbers = contact.phones;

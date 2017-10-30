@@ -1,44 +1,57 @@
-﻿import Dexie from './typings/dexie/dexie';
-import { DbContext } from './cc.idb.dbcontext';
-import { IData, Data } from './models/cc.idb.models.data';
-import { Contact, IEntity } from "./models/cc.idb.models.contact";
-import { IEmailAddress, EmailAddress } from "./models/cc.idb.models.iemailaddress";
-import { IPhoneNumber, PhoneNumber } from "./models/cc.idb.models.iphonenumber";
-import * as $ from "jquery";
+﻿import * as $ from "jquery";
+import Dexie from 'typings/dexie/dexie';
+import * as model from './cc.idb.dbcontext';
 
 export namespace cc.Idb {
     export class App {
-        private db: DbContext;
+        private db: model.DbContext;
         private lastSync: Date = new Date(1970, 1, 1);
         private syncServiceWorker: Worker = null;
 
         constructor(private containerId: string) {
-            console.log("App cntr");
-            this.db = new DbContext();
+            this.db = new model.DbContext();
             this.createSyncServiceWorker();
         }
 
         public init(): void {
             this.bind();
+
             this.rebind()
                 .then(() => {
                     //console.log('then');
                 })
                 .finally(() => {
-                    //console.log('finally');
-                    this.sync();
+                    this.initPeriodicSync();                    
                 });
+        }
+
+        private initPeriodicSync(): void {
+            window.setTimeout(this.sync, 5000);
         }
 
         private createSyncServiceWorker(): void {
             try {
                 this.syncServiceWorker = new Worker('/scripts/cc.idb.ww.js');
-                this.syncServiceWorker.onmessage = (e) => {
-                    console.log('Message received from worker: ')
-                    console.log(e);
-                    this.sync();
+
+                this.syncServiceWorker.onmessage = (e: MessageEvent) => {
+                    console.log('UI.onMessage: ', e);
+
+                    switch (e.data.action) {
+                        case 'ready':
+                            this.sync();
+                            //this.initPeriodicSync();
+                            break;
+                        case 'synced':
+                            this.rebind();
+                            break;
+                        case 'syncing':
+                            //this.sync();
+                            break;
+                    }
                 }
+
                 this.syncServiceWorker.onerror = (e) => {
+                    console.warn('UI.onError: ');
                     console.error(e);
                 }
             } catch (e) {
@@ -47,13 +60,16 @@ export namespace cc.Idb {
         }
 
         private sync(): void {
-            console.log('Sync');
+            console.log('app.sync');
 
-            if (this.syncServiceWorker) {
-                console.log('Post message to SyncService');
-                this.syncServiceWorker.postMessage('Sync');
+            if (typeof this.syncServiceWorker != 'undefined') {
+                console.log('app.sync.webworker');
+                var message = { action: 'sync' };
+                console.log('UI: postMessage', message);
+                this.syncServiceWorker.postMessage(message);
             }
             else {
+                console.log('app.sync.ajax');
                 $.get('/api/sync', (data, status, xhr) => {
                     this.merge(data);
                     this.rebind();
@@ -61,7 +77,7 @@ export namespace cc.Idb {
             }
         }
 
-        private post(data: IData): void {
+        private post(data: model.IData): void {
             console.log('Save to server');
             $.post('/api/sync', data, (data, status, xhr) => {
                 console.log('Contact saved');
@@ -76,15 +92,15 @@ export namespace cc.Idb {
             this.db.emails.clear();
         }
 
-        private merge(data: IData): void {
-            data.contacts.forEach((contact) => { this.mergeItem<Contact>(contact, 'contacts'); });
-            data.emails.forEach((email) => { this.mergeItem<IEmailAddress>(email, 'emails'); });
-            data.phoneNumbers.forEach((phone) => { this.mergeItem<IPhoneNumber>(phone, 'phones'); });
+        private merge(data: model.IData): void {
+            data.contacts.forEach((contact) => { this.mergeItem<model.IContact>(contact, 'contacts'); });
+            data.emails.forEach((email) => { this.mergeItem<model.IEmailAddress>(email, 'emails'); });
+            data.phoneNumbers.forEach((phone) => { this.mergeItem<model.IPhoneNumber>(phone, 'phones'); });
         }
 
-        private mergeItem<T extends IEntity>(item: T, table: string): void {
+        private mergeItem<T extends model.IEntity>(item: T, table: string): void {
             this.db.table(table).get(item.id)
-                .then((localItem: IEntity) => {
+                .then((localItem: model.IEntity) => {
                     if (item.modified > localItem.modified) {
                         this.db.table(table).put(item);
                     } else {
@@ -109,20 +125,20 @@ export namespace cc.Idb {
             });
             $('#btnSave').click(() => {
                 var id = parseInt($('#txtId').val());
-                var contact = new Contact($('#txtFirstName').val(), $('#txtLastName').val(), $('#txtProfile').val(), id);
+                var contact = new model.Contact($('#txtFirstName').val(), $('#txtLastName').val(), $('#txtProfile').val(), id);
 
                 var emails = $('#txtEmails').val().split('\n');
-                contact.emails = emails.map((email) => { return new EmailAddress(email); });
+                contact.emails = emails.map((email) => { return new model.Email(email); });
 
                 var phones = $('#txtPhones').val().split('\n');
-                contact.phones = phones.map((phone) => { return new PhoneNumber(phone); });
+                contact.phones = phones.map((phone) => { return new model.PhoneNumber(phone); });
 
                 console.log("New Contact:");
                 console.log(contact);
 
                 contact.save();
 
-                var data = new Data();
+                var data = new model.Data();
                 data.contacts.push(contact);
                 data.emails = contact.emails;
                 data.phoneNumbers = contact.phones;
@@ -138,7 +154,7 @@ export namespace cc.Idb {
 
         private rebind(): Dexie.Promise<void> {
             $('#' + this.containerId).html('');
-            return this.db.contacts.each((item: Contact, cursor) => {
+            return this.db.contacts.each((item: model.IContact, cursor) => {
                 item.loadNavigationProperties().then(() => {
                     console.log(item);
 

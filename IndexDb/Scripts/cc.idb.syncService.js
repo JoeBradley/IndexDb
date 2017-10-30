@@ -1,32 +1,54 @@
-define(["require", "exports", "cc.idb.dbcontext", "jquery"], function (require, exports, cc_idb_dbcontext_1, $) {
+define(["require", "exports", "./cc.idb.dbcontext", "jquery"], function (require, exports, cc_idb_dbcontext_1, $) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var cc;
     (function (cc) {
         var Idb;
         (function (Idb) {
+            /**
+             * /@description Sync Service
+             */
             class SyncService {
-                constructor() {
+                /**
+                 * Web Worker Sync Service
+                 * @param {DedicatedWorkerGlobalScope} self - Web Worker global scope for calling self.postMessage()
+                 */
+                constructor(self) {
+                    this.self = self;
                     this.lastSync = new Date(1970, 1, 1);
                     this.db = new cc_idb_dbcontext_1.DbContext();
-                    onmessage = (e) => {
-                        console.log('Message received from web worker parent', e);
-                        switch (e.data) {
-                            case "Sync":
-                                this.load();
-                                //self.postMessage('DataSync', e.origin);
-                                break;
-                        }
-                    };
+                    //this.synced = new CustomEvent("synced");
+                    //this.syncing = new CustomEvent("syncing");
+                    if (typeof this.self !== 'undefined') {
+                        this.self.onmessage = (e) => {
+                            console.log('Worker: onMessage', e);
+                            switch (e.data.action) {
+                                case "sync":
+                                    this.sync();
+                                    break;
+                                case "post":
+                                    this.sync();
+                                    break;
+                            }
+                        };
+                    }
                     //console.log(self.location.origin);
                     //console.log(self);
-                    //self.postMessage("Loaded", self.location.origin, null);
-                    console.log('SyncService Initialized');
+                    this.self.postMessage({ action: 'ready' });
+                    //this.onSynced.bind(this.synced);
+                    //self.dispatchEvent(this.synced);
                 }
-                load() {
+                sync() {
                     try {
+                        console.log('SyncService.sync');
+                        if (this.self) {
+                            this.self.postMessage({ sction: 'syncing' });
+                        }
                         $.get('/api/sync', (data, status, xhr) => {
                             this.merge(data);
+                            if (this.self) {
+                                this.self.postMessage({ sction: 'synced' });
+                            }
                         });
                     }
                     catch (e) {

@@ -1,1 +1,1 @@
-{"version":3,"file":"cc.idb.models.data.js","sourceRoot":"","sources":["cc.idb.models.data.ts"],"names":[],"mappings":";;;IAUA;QAAA;YACI,WAAM,GAAyB,EAAE,CAAC;YAClC,iBAAY,GAAwB,EAAE,CAAC;YACvC,aAAQ,GAAmB,EAAE,CAAC;QAClC,CAAC;KAAA;IAJD,oBAIC"}
+{"version":3,"file":"cc.idb.models.data.js","sourceRoot":"","sources":["cc.idb.models.data.ts"],"names":[],"mappings":";;;IAUA;QAAA;YACI,WAAM,GAAyB,EAAE,CAAC;YAClC,iBAAY,GAAwB,EAAE,CAAC;YACvC,aAAQ,GAAoB,EAAE,CAAC;QACnC,CAAC;KAAA;IAJD,oBAIC"}

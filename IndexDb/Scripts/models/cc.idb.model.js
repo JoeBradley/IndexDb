@@ -9,6 +9,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 define(["require", "exports", "../cc.idb.dbcontext"], function (require, exports, cc_idb_dbcontext_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    class Email {
+        constructor(email) {
+            this.email = email;
+        }
+    }
+    exports.Email = Email;
+    class PhoneNumber {
+        constructor(phone) {
+            this.type = null;
+            this.phone = '';
+            this.modified = new Date();
+            this.timestamp = new Date();
+            this.phone = phone;
+        }
+    }
+    exports.PhoneNumber = PhoneNumber;
     /* This is a 'physical' class that is mapped to
         * the contacts table. We can have methods on it that
         * we could call on retrieved database objects.
@@ -79,4 +95,4 @@ define(["require", "exports", "../cc.idb.dbcontext"], function (require, exports
     }
     exports.Data = Data;
 });
-//# sourceMappingURL=cc.idb.models.contact.js.map
+//# sourceMappingURL=cc.idb.model.js.map
