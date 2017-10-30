@@ -1,0 +1,21 @@
+{
+  "name": "IndexDB",
+  "version": "0.1.0",
+  "description": "IndexeDB and Web Workers POC",
+  "author":
+  {
+    "name":"Chris Cassidy"
+  },
+  "license": "MIT",
+  "homepage":"https://JoeBradley.github.com/IndexDb",
+  "bugs":"",
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/JoeBradley/IndexDb"
+  },
+  "dependencies":
+  { 
+    "dexie": "latest"
+  }
+}
