@@ -108,6 +108,7 @@
     <Content Include="Images\icons\monkey_152.png" />
     <Content Include="Images\icons\monkey_192.png" />
     <Content Include="Images\icons\monkey_256.png" />
+    <Content Include="Images\icons\monkey_512.png" />
     <Content Include="Images\ic_add_white_24px.svg" />
     <Content Include="Images\ic_refresh_white_24px.svg" />
     <Content Include="Images\loading.gif" />

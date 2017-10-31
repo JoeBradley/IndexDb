@@ -13,9 +13,9 @@ var cc;
                 this.cacheName = 'contactManager-v1';
                 this.filesToCache = [
                     '/index.html',
+                    '/scripts/require.js',
                     '/scripts/dexie/dexie.js',
                     '/scripts/jquery/jquery-3.2.1.js',
-                    '/scripts/require.js',
                     '/scripts/cc.idb.app.js',
                     '/scripts/cc.idb.dbcontext.js',
                     '/scripts/cc.idb.startup.js',
@@ -29,7 +29,7 @@ var cc;
                     '/images/profiles/Anna.jpg',
                     '/images/loading.gif',
                     '/images/ic_add_white_24px.svg',
-                    '/images/ic_refresh_white_24px.svg',
+                    '/images/ic_refresh_white_24px.svg'
                 ];
                 this.bindEventListeners();
             }
@@ -37,6 +37,7 @@ var cc;
                 var _that = this;
                 this.self.addEventListener('install', (e) => {
                     console.log('[ServiceWorker] Install');
+                    e.waitUntil(caches.delete(this.cacheName));
                     e.waitUntil(caches
                         .open(this.cacheName)
                         .then((cache) => {
@@ -72,32 +73,17 @@ var cc;
                 });
                 this.self.addEventListener('fetch', (e) => {
                     console.log('[Service Worker] Fetch', e.request.url);
-                    var dataUrl = 'https://query.yahooapis.com/v1/public/yql';
-                    if (e.request.url.indexOf(dataUrl) > -1) {
-                        /*
-                         * When the request URL contains dataUrl, the app is asking for fresh
-                         * weather data. In this case, the service worker always goes to the
-                         * network and then caches the response. This is called the "Cache then
-                         * network" strategy:
-                         * https://jakearchibald.com/2014/offline-cookbook/#cache-then-network
-                         */
-                        e.respondWith(caches.open(this.dataCacheName).then(function (cache) {
-                            return fetch(e.request).then(function (response) {
-                                cache.put(e.request.url, response.clone());
-                                return response;
-                            });
-                        }));
-                    }
-                    else {
-                        /*
-                         * The app is asking for app shell files. In this scenario the app uses the
-                         * "Cache, falling back to the network" offline strategy:
-                         * https://jakearchibald.com/2014/offline-cookbook/#cache-falling-back-to-network
-                         */
-                        e.respondWith(caches.match(e.request).then(function (response) {
-                            return response || fetch(e.request);
-                        }));
-                    }
+                    /*
+                     * The app is asking for app shell files. In this scenario the app uses the
+                     * "Cache, falling back to the network" offline strategy:
+                     * https://jakearchibald.com/2014/offline-cookbook/#cache-falling-back-to-network
+                     */
+                    e.respondWith(caches
+                        .match(e.request)
+                        .then((response) => {
+                        return response || fetch(e.request);
+                    })
+                        .catch((reason) => { console.warn('Cache fetch failed', reason); }));
                 });
             }
         }

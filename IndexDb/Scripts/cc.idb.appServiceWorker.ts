@@ -5,23 +5,27 @@
         cacheName: string = 'contactManager-v1';
         filesToCache: Array<string> = [
             '/index.html',
+
+            '/scripts/require.js',
             '/scripts/dexie/dexie.js',
             '/scripts/jquery/jquery-3.2.1.js',
-            '/scripts/require.js',
+
             '/scripts/cc.idb.app.js',
             '/scripts/cc.idb.dbcontext.js',
             '/scripts/cc.idb.startup.js',
             '/scripts/cc.idb.syncService.js',
             '/scripts/cc.idb.ww.js',
             '/scripts/models/cc.idb.model.js',
+
             '/content/styles.css',
+
             '/images/icons/monkey_32.png',
             '/images/icons/monkey_128.png',
             '/images/profiles/Chris.jpg',
             '/images/profiles/Anna.jpg',
             '/images/loading.gif',
             '/images/ic_add_white_24px.svg',
-            '/images/ic_refresh_white_24px.svg',
+            '/images/ic_refresh_white_24px.svg'
         ];
 
         /**
@@ -34,8 +38,12 @@
 
         private bindEventListeners() {
             var _that = this;
+
             this.self.addEventListener('install', (e: any) => {
                 console.log('[ServiceWorker] Install');
+
+                e.waitUntil(caches.delete(this.cacheName));
+
                 e.waitUntil(
                     caches
                         .open(this.cacheName)
@@ -43,7 +51,7 @@
                             console.log('[ServiceWorker] Caching app shell file: \n' + JSON.stringify(this.filesToCache));
                             return cache.addAll(this.filesToCache);
                         })
-                        .catch((reason: any) => { console.warn('ServiceWorker.addEventListener install failed',reason); })
+                        .catch((reason: any) => { console.warn('ServiceWorker.addEventListener install failed', reason); })
 
                 );
             });
@@ -79,35 +87,20 @@
 
             this.self.addEventListener('fetch', (e: any) => {
                 console.log('[Service Worker] Fetch', e.request.url);
-                var dataUrl = 'https://query.yahooapis.com/v1/public/yql';
-                if (e.request.url.indexOf(dataUrl) > -1) {
-                    /*
-                     * When the request URL contains dataUrl, the app is asking for fresh
-                     * weather data. In this case, the service worker always goes to the
-                     * network and then caches the response. This is called the "Cache then
-                     * network" strategy:
-                     * https://jakearchibald.com/2014/offline-cookbook/#cache-then-network
-                     */
-                    e.respondWith(
-                        caches.open(this.dataCacheName).then(function (cache) {
-                            return fetch(e.request).then(function (response) {
-                                cache.put(e.request.url, response.clone());
-                                return response;
-                            });
-                        })
-                    );
-                } else {
-                    /*
-                     * The app is asking for app shell files. In this scenario the app uses the
-                     * "Cache, falling back to the network" offline strategy:
-                     * https://jakearchibald.com/2014/offline-cookbook/#cache-falling-back-to-network
-                     */
-                    e.respondWith(
-                        caches.match(e.request).then(function (response) {
+
+                /*
+                 * The app is asking for app shell files. In this scenario the app uses the
+                 * "Cache, falling back to the network" offline strategy:
+                 * https://jakearchibald.com/2014/offline-cookbook/#cache-falling-back-to-network
+                 */
+                e.respondWith(
+                    caches
+                        .match(e.request)
+                        .then((response) => {
                             return response || fetch(e.request);
                         })
-                    );
-                }
+                        .catch((reason) => { console.warn('Cache fetch failed', reason); })
+                );
             });
         }
     }

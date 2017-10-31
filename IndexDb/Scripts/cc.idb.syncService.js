@@ -61,7 +61,10 @@ define(["require", "exports", "./cc.idb.dbcontext"], function (require, exports,
                                 console.warn('api sync failed', response.statusText);
                             }
                         })
-                            .catch((reason) => { console.warn('SnycService.sync failed', reason); });
+                            .catch((reason) => {
+                            console.warn('SnycService.sync failed', reason);
+                            this.self.postMessage({ action: 'synced' });
+                        });
                     }
                     catch (e) {
                         console.error(e);

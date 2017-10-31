@@ -70,14 +70,17 @@ export namespace cc.Idb {
                                     //console.log(json)
                                     this.merge(json);
                                     if (this.self) { this.self.postMessage({ action: 'synced' }); }
-                                })
+                                })                                
                                 .catch((reason: any) => { console.warn('SnycService.sync merge failed', reason); });
                         }
                         else {
                             console.warn('api sync failed', response.statusText);
                         }
                     })
-                    .catch((reason: any) => { console.warn('SnycService.sync failed', reason); });
+                    .catch((reason: any) => {
+                        console.warn('SnycService.sync failed', reason);
+                        this.self.postMessage({ action: 'synced' });
+                    });                
             } catch (e) {
                 console.error(e);
             }

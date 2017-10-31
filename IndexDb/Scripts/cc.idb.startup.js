@@ -13,7 +13,5 @@ requirejs(['cc.idb.app', 'jquery'], function (cc_idb_app, $) {
     var main = new cc_idb_app.cc.Idb.App('contacts_list', 'btnRefresh', 'btnAdd');
     main.init();
 }, function (e) {
-    cosole.warn("Error loading scripts in cc.id.app");
-    console.error(e);
-    throw e;
+    console.warn("Error loading scripts", e);
 });
