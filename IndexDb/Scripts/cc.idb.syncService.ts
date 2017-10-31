@@ -62,18 +62,22 @@ export namespace cc.Idb {
 
                 if (this.self) { this.self.postMessage({ action: 'syncing' }); }
 
-                fetch('/api/sync').then((response: Response) => {
-                    if (response.ok) {
-                        response.json().then((json: model.IData) => {
-                            //console.log(json)
-                            this.merge(json);
-                            if (this.self) { this.self.postMessage({ action: 'synced' }); }
-                        });
-                    }
-                    else {
-                        console.warn('api sync failed', response.statusText);
-                    }
-                });
+                fetch('/api/sync')
+                    .then((response: Response) => {
+                        if (response.ok) {
+                            response.json()
+                                .then((json: model.IData) => {
+                                    //console.log(json)
+                                    this.merge(json);
+                                    if (this.self) { this.self.postMessage({ action: 'synced' }); }
+                                })
+                                .catch((reason: any) => { console.warn('SnycService.sync merge failed', reason); });
+                        }
+                        else {
+                            console.warn('api sync failed', response.statusText);
+                        }
+                    })
+                    .catch((reason: any) => { console.warn('SnycService.sync failed', reason); });
             } catch (e) {
                 console.error(e);
             }
@@ -81,20 +85,23 @@ export namespace cc.Idb {
 
         private save(data: model.IData): void {
             console.log('Save to server');
-            fetch('/api/sync', {
-                method: 'POST',
-                mode: 'cors',
-                redirect: 'follow',
-                body: JSON.stringify(data),
-                headers: new Headers({ 'Content-Type': 'application/json' })
-            }).then((response: Response) => {
-                if (response.ok) {
-                    console.log('Contact saved');
-                }
-                else {
-                    console.warn('Contact failed to save');
-                }
-            });
+            fetch('/api/sync',
+                {
+                    method: 'POST',
+                    mode: 'cors',
+                    redirect: 'follow',
+                    body: JSON.stringify(data),
+                    headers: new Headers({ 'Content-Type': 'application/json' })
+                })
+                .then((response: Response) => {
+                    if (response.ok) {
+                        console.log('Contact saved');
+                    }
+                    else {
+                        console.warn('Contact failed to save');
+                    }
+                })
+                .catch((reason: any) => { console.warn('SnycService.save failed', reason); });
         }
 
         private truncateDb(): void {

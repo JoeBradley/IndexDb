@@ -12,6 +12,7 @@ define(["require", "exports", "jquery", "./cc.idb.dbcontext"], function (require
                     this.syncServiceWorker = null;
                     this.db = new model.DbContext();
                     this.createSyncServiceWorker();
+                    this.attachServiceWorker();
                 }
                 init() {
                     this.bind();
@@ -23,6 +24,14 @@ define(["require", "exports", "jquery", "./cc.idb.dbcontext"], function (require
                         if (this.syncServiceWorker === null)
                             this.initPeriodicSync();
                     });
+                }
+                attachServiceWorker() {
+                    if ('serviceWorker' in navigator) {
+                        navigator.serviceWorker
+                            .register('/Scripts/cc.idb.appServiceWorker.js')
+                            .then(() => { console.log('Service Worker Registered'); })
+                            .catch((reason) => { console.error('Failed to attach service worker'); });
+                    }
                 }
                 initPeriodicSync() {
                     window.setInterval(() => {

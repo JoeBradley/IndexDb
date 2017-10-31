@@ -44,24 +44,20 @@ define(["require", "exports", "./cc.idb.dbcontext"], function (require, exports,
                         if (this.self) {
                             this.self.postMessage({ action: 'syncing' });
                         }
-                        fetch('/api/sync')
-                            .then((response) => {
+                        fetch('/api/sync').then((response) => {
                             if (response.ok) {
-                                response.json()
-                                    .then((json) => {
+                                response.json().then((json) => {
                                     //console.log(json)
                                     this.merge(json);
                                     if (this.self) {
                                         this.self.postMessage({ action: 'synced' });
                                     }
-                                })
-                                    .catch((reason) => { console.warn('SnycService.sync merge failed', reason); });
+                                });
                             }
                             else {
                                 console.warn('api sync failed', response.statusText);
                             }
-                        })
-                            .catch((reason) => { console.warn('SnycService.sync failed', reason); });
+                        });
                     }
                     catch (e) {
                         console.error(e);
@@ -75,16 +71,14 @@ define(["require", "exports", "./cc.idb.dbcontext"], function (require, exports,
                         redirect: 'follow',
                         body: JSON.stringify(data),
                         headers: new Headers({ 'Content-Type': 'application/json' })
-                    })
-                        .then((response) => {
+                    }).then((response) => {
                         if (response.ok) {
                             console.log('Contact saved');
                         }
                         else {
                             console.warn('Contact failed to save');
                         }
-                    })
-                        .catch((reason) => { console.warn('SnycService.save failed', reason); });
+                    });
                 }
                 truncateDb() {
                     this.db.contacts.clear();
@@ -115,4 +109,4 @@ define(["require", "exports", "./cc.idb.dbcontext"], function (require, exports,
         })(Idb = cc.Idb || (cc.Idb = {}));
     })(cc = exports.cc || (exports.cc = {}));
 });
-//# sourceMappingURL=cc.idb.syncService.js.map
+//# sourceMappingURL=cc.idb.appSyncService.js.map

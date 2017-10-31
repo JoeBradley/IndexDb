@@ -1,0 +1,39 @@
+﻿{
+  "name": "Contact Manager",
+  "short_name": "Contact Manager v1.0.0",
+  "icons": [
+    {
+      "src": "images/icons/monkey_128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "images/icons/monkey_144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "images/icons/monkey_152.png",
+      "sizes": "152x152",
+      "type": "image/png"
+    },
+    {
+      "src": "images/icons/monkey_192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "images/icons/monkey_256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffff27",
+  "theme_color": "#ffff27",
+  "serviceworker": {
+    "src": "/scripts/cc.idb.appServiceWorker.js"
+  }
+}
