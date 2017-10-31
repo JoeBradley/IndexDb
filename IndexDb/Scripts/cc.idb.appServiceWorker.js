@@ -37,22 +37,27 @@ var cc;
                 var _that = this;
                 this.self.addEventListener('install', (e) => {
                     console.log('[ServiceWorker] Install');
-                    e.waitUntil(caches.open(this.cacheName).then((cache) => {
+                    e.waitUntil(caches
+                        .open(this.cacheName)
+                        .then((cache) => {
                         console.log('[ServiceWorker] Caching app shell file: \n' + JSON.stringify(this.filesToCache));
                         return cache.addAll(this.filesToCache);
-                    }));
+                    })
+                        .catch((reason) => { console.warn('ServiceWorker.addEventListener install failed', reason); }));
                 });
                 this.self.addEventListener('activate', (e) => {
                     console.log('[ServiceWorker] Activate');
                     var _that = this;
-                    e.waitUntil(caches.keys().then(function (keyList) {
+                    e.waitUntil(caches.keys()
+                        .then(function (keyList) {
                         return Promise.all(keyList.map((key) => {
-                            if (key !== this.cacheName && key !== this.dataCacheName) {
+                            if (key !== _that.cacheName && key !== _that.dataCacheName) {
                                 console.log('[ServiceWorker] Removing old cache', key);
                                 return caches.delete(key);
                             }
                         }));
-                    }));
+                    })
+                        .catch((reason) => { console.warn('ServiceWorker.addEventListener activate failed', reason); }));
                     /*
                      * Fixes a corner case in which the app wasn't returning the latest data.
                      * You can reproduce the corner case by commenting out the line below and

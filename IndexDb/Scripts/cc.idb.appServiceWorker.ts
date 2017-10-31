@@ -34,13 +34,17 @@
 
         private bindEventListeners() {
             var _that = this;
-            this.self.addEventListener('install', (e : any) => {
+            this.self.addEventListener('install', (e: any) => {
                 console.log('[ServiceWorker] Install');
                 e.waitUntil(
-                    caches.open(this.cacheName).then((cache) => {
-                        console.log('[ServiceWorker] Caching app shell file: \n' + JSON.stringify(this.filesToCache));
-                        return cache.addAll(this.filesToCache);
-                    })
+                    caches
+                        .open(this.cacheName)
+                        .then((cache) => {
+                            console.log('[ServiceWorker] Caching app shell file: \n' + JSON.stringify(this.filesToCache));
+                            return cache.addAll(this.filesToCache);
+                        })
+                        .catch((reason: any) => { console.warn('ServiceWorker.addEventListener install failed',reason); })
+
                 );
             });
 
@@ -48,14 +52,17 @@
                 console.log('[ServiceWorker] Activate');
                 var _that = this;
                 e.waitUntil(
-                    caches.keys().then(function (keyList) {
-                        return Promise.all(keyList.map((key) => {
-                            if (key !== this.cacheName && key !== this.dataCacheName) {
-                                console.log('[ServiceWorker] Removing old cache', key);
-                                return caches.delete(key);
-                            }
-                        }));
-                    })
+                    caches.keys()
+                        .then(function (keyList) {
+                            return Promise.all(keyList.map((key) => {
+                                if (key !== _that.cacheName && key !== _that.dataCacheName) {
+                                    console.log('[ServiceWorker] Removing old cache', key);
+                                    return caches.delete(key);
+                                }
+                            }));
+                        })
+                        .catch((reason: any) => { console.warn('ServiceWorker.addEventListener activate failed', reason); })
+
                 );
                 /*
                  * Fixes a corner case in which the app wasn't returning the latest data.
@@ -70,7 +77,7 @@
                 return this.self.clients.claim();
             });
 
-            this.self.addEventListener('fetch', (e : any) => {
+            this.self.addEventListener('fetch', (e: any) => {
                 console.log('[Service Worker] Fetch', e.request.url);
                 var dataUrl = 'https://query.yahooapis.com/v1/public/yql';
                 if (e.request.url.indexOf(dataUrl) > -1) {

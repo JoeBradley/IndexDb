@@ -10,7 +10,7 @@ require.config({
 
 requirejs(['cc.idb.app', 'jquery'], function (cc_idb_app, $) {
     console.log("Start App");
-    var main = new cc_idb_app.cc.Idb.App("contacts_list");
+    var main = new cc_idb_app.cc.Idb.App('contacts_list', 'btnRefresh', 'btnAdd');
     main.init();
 }, function (e) {
     cosole.warn("Error loading scripts in cc.id.app");

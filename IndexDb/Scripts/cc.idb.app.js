@@ -6,13 +6,16 @@ define(["require", "exports", "jquery", "./cc.idb.dbcontext"], function (require
         var Idb;
         (function (Idb) {
             class App {
-                constructor(containerId) {
+                constructor(containerId, btnRefreshId, btnAddId) {
                     this.containerId = containerId;
+                    this.btnRefreshId = btnRefreshId;
+                    this.btnAddId = btnAddId;
                     this.lastSync = new Date(1970, 1, 1);
                     this.syncServiceWorker = null;
                     this.db = new model.DbContext();
                     this.createSyncServiceWorker();
                     this.attachServiceWorker();
+                    this.bindUi();
                 }
                 init() {
                     this.bind();
@@ -32,6 +35,10 @@ define(["require", "exports", "jquery", "./cc.idb.dbcontext"], function (require
                             .then(() => { console.log('Service Worker Registered'); })
                             .catch((reason) => { console.error('Failed to attach service worker'); });
                     }
+                }
+                bindUi() {
+                    $('#' + this.btnAddId).click((e) => { });
+                    $('#' + this.btnRefreshId).click((e) => { this.sync(); });
                 }
                 initPeriodicSync() {
                     window.setInterval(() => {

@@ -8,10 +8,11 @@ export namespace cc.Idb {
         private lastSync: Date = new Date(1970, 1, 1);
         private syncServiceWorker: Worker = null;
 
-        constructor(private containerId: string) {
+        constructor(private containerId: string, private btnRefreshId: string, private btnAddId: string) {
             this.db = new model.DbContext();
             this.createSyncServiceWorker();
             this.attachServiceWorker();
+            this.bindUi();
         }
 
         public init(): void {
@@ -26,7 +27,7 @@ export namespace cc.Idb {
                         this.initPeriodicSync();
                 });
         }
-
+        
         private attachServiceWorker() {
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker
@@ -34,6 +35,11 @@ export namespace cc.Idb {
                     .then(() => { console.log('Service Worker Registered'); })
                     .catch((reason: any) => { console.error('Failed to attach service worker')});
             }
+        }
+
+        private bindUi(): void {
+            $('#' + this.btnAddId).click((e) => { });
+            $('#' + this.btnRefreshId).click((e) => { this.sync(); });
         }
 
         private initPeriodicSync(): void {
