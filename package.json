@@ -8,7 +8,7 @@
   },
   "license": "MIT",
   "homepage":"https://JoeBradley.github.com/IndexDb",
-  "bugs":"",
+  "bugs":"https://github.com/JoeBradley/IndexDb/issues",
   "repository":
   {
     "type": "git",
@@ -16,6 +16,7 @@
   },
   "dependencies":
   { 
-    "dexie": "latest"
+    "dexie": "latest",
+    "jquery": "latest"
   }
 }
