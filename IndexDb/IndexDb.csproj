@@ -18,7 +18,7 @@
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
-    <IISExpressSSLPort />
+    <IISExpressSSLPort>44324</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
@@ -103,38 +103,26 @@
     <Content Include="Content\jasmine\jasmine.css" />
     <Content Include="Content\jasmine\jasmine_favicon.png" />
     <Content Include="Global.asax" />
-    <Content Include="Images\clear.png" />
-    <Content Include="Images\cloudy-scattered-showers.png" />
-    <Content Include="Images\cloudy.png" />
-    <Content Include="Images\cloudy_s_sunny.png" />
-    <Content Include="Images\fog.png" />
-    <Content Include="Images\icons\icon-128x128.png" />
-    <Content Include="Images\icons\icon-144x144.png" />
-    <Content Include="Images\icons\icon-152x152.png" />
-    <Content Include="Images\icons\icon-192x192.png" />
-    <Content Include="Images\icons\icon-256x256.png" />
-    <Content Include="Images\icons\icon-32x32.png" />
+    <Content Include="Images\icons\monkey_128.png" />
+    <Content Include="Images\icons\monkey_144.png" />
+    <Content Include="Images\icons\monkey_152.png" />
+    <Content Include="Images\icons\monkey_192.png" />
+    <Content Include="Images\icons\monkey_256.png" />
     <Content Include="Images\ic_add_white_24px.svg" />
     <Content Include="Images\ic_refresh_white_24px.svg" />
     <Content Include="Images\loading.gif" />
-    <Content Include="Images\partly-cloudy.png" />
+    <Content Include="Images\icons\monkey_32.png" />
     <Content Include="Images\profiles\Anna.jpg" />
     <Content Include="Images\profiles\Chris.jpg" />
-    <Content Include="Images\rain.png" />
-    <Content Include="Images\scattered-showers.png" />
-    <Content Include="Images\sleet.png" />
-    <Content Include="Images\snow.png" />
-    <Content Include="Images\thunderstorm.png" />
-    <Content Include="Images\wind.png" />
     <Content Include="Scripts\cc.idb.startup.js" />
     <Content Include="Scripts\dexie\dexie.js" />
+    <TypeScriptCompile Include="Scripts\cc.idb.appServiceWorker.ts" />
     <TypeScriptCompile Include="Scripts\models\cc.idb.model.ts" />
     <TypeScriptCompile Include="Scripts\service.ts" />
     <Content Include="Scripts\jquery\jquery-ajax-2.1.1.min.js" />
     <Content Include="Scripts\typings\dexie\dexie.js.map" />
     <Content Include="App_Data\contacts.json" />
-    <Content Include="Images\icons\Thumbs.db" />
-    <Content Include="Images\Thumbs.db" />
+    <None Include="manifest.json" />
     <None Include="Scripts\jquery\jquery-3.2.1.intellisense.js" />
     <Content Include="Index.html" />
     <Content Include="Scripts\typings\dexie\dexie.js" />

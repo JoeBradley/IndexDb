@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <title>Indexed DB App</title>
+    <title>Contact Manager</title>
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,22 +11,22 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="Indexed DB App">
     <meta name="msapplication-TileImage" content="images/icons/icon-144x144.png">
-    <meta name="msapplication-TileColor" content="#2F3BA2">
+    <meta name="msapplication-TileColor" content="#ffff27">
+    <meta name="theme-color" content="#ffff27">
 
-    <!-- TODO add manifest here -->
-    <!--<link rel="manifest" href="manifest.json">-->
-    <link rel="icon" href="images/icons/icon-32x32.png" type="image/png">
-    <link rel="apple-touch-icon" href="images/icons/icon-152x152.png">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="images/icons/monkey_32.png" type="image/png">
+    <link rel="apple-touch-icon" href="images/icons/monkey_152.png">
 
     <link rel="stylesheet" type="text/css" href="content/styles.css">
     <script src="/Scripts/require.js" data-main="./scripts/cc.idb.startup.js"></script>
 </head>
 <body>
     <header class="header">
-        <h1 class="header__title">Indexed DB App</h1>
+        <div id="logo"><img src="Images/icons/monkey_128.png" width="32" height="32" /></div>
+        <h1 class="header__title">Contact Manager</h1>
         <button id="btnRefresh" class="headerButton" aria-label="Refresh"></button>
         <button id="btnAdd" class="headerButton" aria-label="Add"></button>
-        <input id="btnPhoto" accept="image/*" type="file" title="Photo" />
         <div id="loading" style="display:none;"><img src="Images/loading.gif" width="32" height="32"/></div>
     </header>
 
