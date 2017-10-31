@@ -21,12 +21,16 @@ export namespace cc.Idb {
                     //console.log('then');
                 })
                 .finally(() => {
-                    this.initPeriodicSync();                    
+                    if (this.syncServiceWorker === null)
+                        this.initPeriodicSync();
                 });
         }
 
         private initPeriodicSync(): void {
-            window.setTimeout(this.sync, 5000);
+            window.setInterval(() => {
+                console.log('Periodic sync');
+                this.sync();
+            }, 10000);
         }
 
         private createSyncServiceWorker(): void {
@@ -34,45 +38,45 @@ export namespace cc.Idb {
                 this.syncServiceWorker = new Worker('/scripts/cc.idb.ww.js');
 
                 this.syncServiceWorker.onmessage = (e: MessageEvent) => {
-                    console.log('UI.onMessage: ', e);
+                    console.log('UI.onMessage', e);
 
                     switch (e.data.action) {
                         case 'ready':
                             this.sync();
-                            //this.initPeriodicSync();
+                            this.initPeriodicSync();
                             break;
                         case 'synced':
                             this.rebind();
+                            $('#loading').hide();
                             break;
                         case 'syncing':
+                            $('#loading').show();
                             //this.sync();
                             break;
                     }
                 }
 
                 this.syncServiceWorker.onerror = (e) => {
-                    console.warn('UI.onError: ');
-                    console.error(e);
+                    console.error('UI.onError', e);
                 }
             } catch (e) {
-                console.error(e);
+                console.error('createSyncServiceWorker.error', e);
             }
         }
 
         private sync(): void {
-            console.log('app.sync');
-
-            if (typeof this.syncServiceWorker != 'undefined') {
-                console.log('app.sync.webworker');
+            console.log('app.sync. method: ' + (this.syncServiceWorker !== null ? 'webworker' : 'ajax'));
+            
+            if (this.syncServiceWorker !== null) {
                 var message = { action: 'sync' };
-                console.log('UI: postMessage', message);
+                console.log('UI.postMessage', message);
                 this.syncServiceWorker.postMessage(message);
             }
             else {
-                console.log('app.sync.ajax');
+                var self = this;
                 $.get('/api/sync', (data, status, xhr) => {
-                    this.merge(data);
-                    this.rebind();
+                    self.merge(data);
+                    self.rebind();
                 });
             }
         }
@@ -156,8 +160,7 @@ export namespace cc.Idb {
             $('#' + this.containerId).html('');
             return this.db.contacts.each((item: model.IContact, cursor) => {
                 item.loadNavigationProperties().then(() => {
-                    console.log(item);
-
+                    
                     $('#contact_template .contact_firstname').html(item.firstName);
                     $('#contact_template .contact_lastname').html(item.lastName);
                     $('#contact_template .contact_profile').css({ "background-image": "url('" + item.profile + "'" });

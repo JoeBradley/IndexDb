@@ -3,23 +3,21 @@
     console.log("Worker: Loading");
 
     self.importScripts('/scripts/require.js');
-
-    require.config({
+    
+    requirejs.config({
         baseUrl: "/Scripts",
         paths: {
-            "dexie": "dexie/dexie",
-            jquery: "jquery/jquery-3.2.1"
+            "dexie": "dexie/dexie"
         }
     });
 
 
     requirejs(
-        ['require','jquery','cc.idb.syncService'],
-        function (require, $, ss) {
+        ['require','cc.Idb.SyncService'],
+        function (require, ss) {
             try {
                 console.log("Worker: Create SyncService");
 
-                //console.log($);
                 //var s = new ss.Service();
 
                 var service = new ss.cc.Idb.SyncService(self);

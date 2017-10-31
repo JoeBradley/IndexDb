@@ -1,4 +1,4 @@
-define(["require", "exports", "./cc.idb.dbcontext", "jquery"], function (require, exports, cc_idb_dbcontext_1, $) {
+define(["require", "exports", "./cc.idb.dbcontext"], function (require, exports, cc_idb_dbcontext_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var cc;
@@ -21,7 +21,7 @@ define(["require", "exports", "./cc.idb.dbcontext", "jquery"], function (require
                     //this.syncing = new CustomEvent("syncing");
                     if (typeof this.self !== 'undefined') {
                         this.self.onmessage = (e) => {
-                            console.log('Worker: onMessage', e);
+                            console.log('Worker.onMessage', e);
                             switch (e.data.action) {
                                 case "sync":
                                     this.sync();
@@ -42,12 +42,20 @@ define(["require", "exports", "./cc.idb.dbcontext", "jquery"], function (require
                     try {
                         console.log('SyncService.sync');
                         if (this.self) {
-                            this.self.postMessage({ sction: 'syncing' });
+                            this.self.postMessage({ action: 'syncing' });
                         }
-                        $.get('/api/sync', (data, status, xhr) => {
-                            this.merge(data);
-                            if (this.self) {
-                                this.self.postMessage({ sction: 'synced' });
+                        fetch('/api/sync').then((response) => {
+                            if (response.ok) {
+                                response.json().then((json) => {
+                                    //console.log(json)
+                                    this.merge(json);
+                                    if (this.self) {
+                                        this.self.postMessage({ action: 'synced' });
+                                    }
+                                });
+                            }
+                            else {
+                                console.warn('api sync failed', response.statusText);
                             }
                         });
                     }
@@ -57,10 +65,19 @@ define(["require", "exports", "./cc.idb.dbcontext", "jquery"], function (require
                 }
                 save(data) {
                     console.log('Save to server');
-                    $.post('/api/sync', data, (data, status, xhr) => {
-                        console.log('Contact saved');
-                    }).fail((xhr, status, error) => {
-                        console.error(status);
+                    fetch('/api/sync', {
+                        method: 'POST',
+                        mode: 'cors',
+                        redirect: 'follow',
+                        body: JSON.stringify(data),
+                        headers: new Headers({ 'Content-Type': 'application/json' })
+                    }).then((response) => {
+                        if (response.ok) {
+                            console.log('Contact saved');
+                        }
+                        else {
+                            console.warn('Contact failed to save');
+                        }
                     });
                 }
                 truncateDb() {

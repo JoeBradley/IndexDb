@@ -1,7 +1,6 @@
 ﻿import Dexie from "./typings/dexie/dexie";
 import { DbContext } from './cc.idb.dbcontext';
 import * as model from "./models/cc.idb.model";
-import * as $ from 'jquery';
 
 export namespace cc.Idb {
 
@@ -34,7 +33,7 @@ export namespace cc.Idb {
 
             if (typeof this.self !== 'undefined') {
                 this.self.onmessage = (e: MessageEvent) => {
-                    console.log('Worker: onMessage', e);
+                    console.log('Worker.onMessage', e);
 
                     switch (e.data.action) {
                         case "sync":
@@ -50,7 +49,7 @@ export namespace cc.Idb {
             //console.log(self.location.origin);
             //console.log(self);
 
-            this.self.postMessage({action:'ready'});
+            this.self.postMessage({ action: 'ready' });
 
             //this.onSynced.bind(this.synced);
 
@@ -61,11 +60,19 @@ export namespace cc.Idb {
             try {
                 console.log('SyncService.sync');
 
-                if (this.self) { this.self.postMessage({ sction: 'syncing' }); }
+                if (this.self) { this.self.postMessage({ action: 'syncing' }); }
 
-                $.get('/api/sync', (data, status, xhr) => {
-                    this.merge(data);
-                    if (this.self) { this.self.postMessage({ sction: 'synced' }); }
+                fetch('/api/sync').then((response: Response) => {
+                    if (response.ok) {
+                        response.json().then((json: model.IData) => {
+                            //console.log(json)
+                            this.merge(json);
+                            if (this.self) { this.self.postMessage({ action: 'synced' }); }
+                        });
+                    }
+                    else {
+                        console.warn('api sync failed', response.statusText);
+                    }
                 });
             } catch (e) {
                 console.error(e);
@@ -74,10 +81,19 @@ export namespace cc.Idb {
 
         private save(data: model.IData): void {
             console.log('Save to server');
-            $.post('/api/sync', data, (data, status, xhr) => {
-                console.log('Contact saved');
-            }).fail((xhr, status, error) => {
-                console.error(status);
+            fetch('/api/sync', {
+                method: 'POST',
+                mode: 'cors',
+                redirect: 'follow',
+                body: JSON.stringify(data),
+                headers: new Headers({ 'Content-Type': 'application/json' })
+            }).then((response: Response) => {
+                if (response.ok) {
+                    console.log('Contact saved');
+                }
+                else {
+                    console.warn('Contact failed to save');
+                }
             });
         }
 

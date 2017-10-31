@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Web;
+using Ploeh.AutoFixture;
 
 namespace IndexDb.App_Start
 {
@@ -30,14 +31,28 @@ namespace IndexDb.App_Start
 
         private static void Populate(ref Data data)
         {
-            data.Contacts.Add(new Contact { Id = 1, FirstName = "Chris", LastName = "Cassidy", Profile="/Images/Profiles/Chris.jpg", Modified = DateTime.Now, Timestamp = DateTime.Now });
-            data.Contacts.Add(new Contact { Id = 2, FirstName = "Anna", LastName = "Cassidy", Profile = "/Images/Profiles/Anna.jpg", Modified = DateTime.Now, Timestamp = DateTime.Now });
+            var fixture = new Fixture();
+            int items = 30;
+            int id = 1;
 
-            data.Emails.Add(new EmailAddress { Id = 1, ContactId = 1, Email = "chri@cassidy.com", Modified = DateTime.Now, Timestamp = DateTime.Now });
-            data.Emails.Add(new EmailAddress { Id = 2, ContactId = 2, Email = "anna@cassidy.com", Modified = DateTime.Now, Timestamp = DateTime.Now });
+            Clear(ref data);
 
-            data.PhoneNumbers.Add(new PhoneNumber { Id = 1, ContactId = 1, Phone = "9876543210", Modified = DateTime.Now, Timestamp = DateTime.Now });
-            data.PhoneNumbers.Add(new PhoneNumber { Id = 2, ContactId = 2, Phone = "1234567890", Modified = DateTime.Now, Timestamp = DateTime.Now });
+            data.Contacts.AddRange(fixture.Build<Contact>()
+                .With(x => x.Id, id++)
+                .With(x => x.Profile, "/Images/Profiles/Chris.jpg")
+                .CreateMany<Contact>(items));
+
+            id = 1;
+            data.Emails.AddRange(fixture.Build<EmailAddress>()
+                .With(x => x.Id, id++)
+                .With(x => x.ContactId, id)
+                .CreateMany(items));
+
+            id = 1;
+            data.PhoneNumbers.AddRange(fixture.Build<PhoneNumber>()
+                .With(x => x.Id, id++)
+                .With(x => x.ContactId, id)
+                .CreateMany(items));
         }
 
         private static void Clear(ref Data data) {
