@@ -11,7 +11,6 @@ export namespace cc.Idb {
         constructor(private containerId: string, private btnRefreshId: string, private btnAddId: string) {
             this.db = new model.DbContext();
             this.createSyncServiceWorker();
-            this.attachServiceWorker();
             this.bindUi();
         }
 
@@ -26,15 +25,6 @@ export namespace cc.Idb {
                     if (this.syncServiceWorker === null)
                         this.initPeriodicSync();
                 });
-        }
-        
-        private attachServiceWorker() {
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker
-                    .register('/Scripts/cc.idb.appServiceWorker.js')
-                    .then(() => { console.log('Service Worker Registered'); })
-                    .catch((reason: any) => { console.error('Failed to attach service worker')});
-            }
         }
 
         private bindUi(): void {

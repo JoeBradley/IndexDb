@@ -33,12 +33,12 @@
       "type": "image/png"
     }
   ],
-  "start_url": "/index.html",
+  "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#ffff27",
   "theme_color": "#ffff27",
-  "serviceworker": {
-    "src": "/scripts/cc.idb.appServiceWorker.js"
-  }
+  "scope": "/",
+  "serviceworker": {"src": "/scripts/cc.idb.sw.js", "scope": "/" }
+  
 }
