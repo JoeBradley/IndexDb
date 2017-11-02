@@ -2,7 +2,7 @@
 
     console.log("Worker: Loading");
 
-    self.importScripts('/scripts/require.js');
+    self.importScripts('/Scripts/require.js');
     
     requirejs.config({
         baseUrl: "/Scripts",
@@ -13,7 +13,7 @@
 
 
     requirejs(
-        ['require','cc.Idb.SyncService'],
+        ['require','cc.idb.syncService'],
         function (require, ss) {
             try {
                 console.log("Worker: Create SyncService");

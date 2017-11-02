@@ -1,42 +1,49 @@
+// NOTE: Service Worker Must be in the root of the application, as this sets the scop of the service worker!!!!
 // see: https://developers.google.com/web/fundamentals/codelabs/debugging-service-workers/
 var oldCacheName = 'contactManager-v1';
 var cacheName = 'contactManager-v1';
+// NOTE: Cache file names are case sensitive and must match the request url case exactly
 var filesToCache = [
-    '',
     '/',
-    '/index.html',
-    '/scripts/require.js',
-    '/scripts/r.js',
-    '/scripts/dexie/dexie.js',
-    '/scripts/jquery/jquery-3.2.1.js',
-    '/scripts/cc.idb.main.js',
-    '/scripts/cc.idb.app.js',
-    '/scripts/cc.idb.dbcontext.js',
-    '/scripts/cc.idb.startup.js',
-    '/scripts/cc.idb.syncService.js',
-    '/scripts/cc.idb.ww.js',
-    '/scripts/models/cc.idb.model.js',
-    '/content/styles.css',
-    '/images/icons/monkey_32.png',
-    '/images/icons/monkey_128.png',
-    '/images/icons/monkey_144.png',
-    '/images/profiles/Chris.jpg',
-    '/images/profiles/Anna.jpg',
-    '/images/loading.gif',
-    '/images/ic_add_white_24px.svg',
-    '/images/ic_refresh_white_24px.svg'
+    'index.html',
+    'scripts/require.js',
+    'scripts/r.js',
+    'scripts/dexie/dexie.js',
+    'scripts/jquery/jquery-3.2.1.js',
+    'cc.idb.main.js',
+    'Scripts/cc.idb.app.js',
+    'Scripts/cc.idb.dbcontext.js',
+    'Scripts/cc.idb.startup.js',
+    'Scripts/cc.idb.syncService.js',
+    'Scripts/cc.idb.ww.js',
+    'Scripts/models/cc.idb.model.js',
+    'Content/styles.css',
+    'Images/icons/monkey_32.png',
+    'Images/icons/monkey_128.png',
+    'images/icons/monkey_144.png',
+    'Images/Profiles/Chris.jpg',
+    'Images/profiles/Anna.jpg',
+    'Images/loading.gif',
+    'Images/ic_add_white_24px.svg',
+    'Images/ic_refresh_white_24px.svg'
 ];
 self.addEventListener('install', function (e) {
     console.log('[ServiceWorker] Install');
     try {
         //e.waitUntil(caches.delete(this.cacheName));
         e.waitUntil(caches
-            .open(this.cacheName)
+            .open(cacheName)
             .then((cache) => {
-            console.log('[ServiceWorker] Caching app shell file: \n' + JSON.stringify(this.filesToCache));
-            return cache.addAll(this.filesToCache);
-        })
-            .catch((reason) => { console.warn('ServiceWorker.addEventListener install failed', reason); }));
+            try {
+                console.log('[ServiceWorker] Caching app files: \n' + JSON.stringify(filesToCache));
+                return cache.addAll(filesToCache);
+            }
+            catch (e) {
+                console.error('[ServiceWorker] Failed to init cache ' + cacheName, e);
+            }
+        }).then(function () {
+            console.log('[ServiceWorker] Install completed');
+        }));
     }
     catch (e) {
         console.error("[ServiceWorker] Fetch error", e);
@@ -62,7 +69,7 @@ self.addEventListener('activate', function (e) {
 });
 self.addEventListener('fetch', function (e) {
     try {
-        console.log('[Service Worker] Fetch', e.request.url);
+        //console.log('[Service Worker] Fetch', e.request.url);
         /*
          * The app is asking for app shell files. In this scenario the app uses the
          * "Cache, falling back to the network" offline strategy:
@@ -70,14 +77,14 @@ self.addEventListener('fetch', function (e) {
          */
         e.respondWith(caches
             .match(e.request)
-            .then((response) => {
+            .then(function (response) {
             if (response) {
-                console.log('[ServiceWorker] Returning cached data for request', e.request);
+                console.log('[ServiceWorker] Returning cached data for request', e.request.url);
                 return response;
             }
-            console.log('[ServiceWorker] No cahced data for request', e.request);
+            console.warn('[ServiceWorker] No cahced data for request', e.request.url);
             return fetch(e.request);
-        }, (reason) => { console.warn('Cache fetch failed', reason); }));
+        }, (reason) => { console.error('Cache fetch failed', reason); }));
     }
     catch (e) {
         console.error("[ServiceWorker] Fetch error", e);

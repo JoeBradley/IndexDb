@@ -115,10 +115,10 @@
     <Content Include="Images\icons\monkey_32.png" />
     <Content Include="Images\profiles\Anna.jpg" />
     <Content Include="Images\profiles\Chris.jpg" />
-    <Content Include="Scripts\cc.idb.main.js" />
+    <Content Include="cc.idb.main.js" />
     <Content Include="Scripts\cc.idb.startup.js" />
     <Content Include="Scripts\dexie\dexie.js" />
-    <TypeScriptCompile Include="Scripts\cc.idb.sw.ts" />
+    <TypeScriptCompile Include="cc.idb.sw.ts" />
     <TypeScriptCompile Include="Scripts\models\cc.idb.model.ts" />
     <TypeScriptCompile Include="Scripts\service.ts" />
     <Content Include="Scripts\jquery\jquery-ajax-2.1.1.min.js" />
