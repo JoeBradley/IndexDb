@@ -39,7 +39,7 @@ define(["require", "exports", "jquery", "./cc.idb.dbcontext"], function (require
                 }
                 createSyncServiceWorker() {
                     try {
-                        this.syncServiceWorker = new Worker('/scripts/cc.idb.ww.js');
+                        this.syncServiceWorker = new Worker('/Scripts/cc.idb.ww.js');
                         this.syncServiceWorker.onmessage = (e) => {
                             console.log('UI.onMessage', e);
                             switch (e.data.action) {

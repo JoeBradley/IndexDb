@@ -41,7 +41,7 @@ export namespace cc.Idb {
 
         private createSyncServiceWorker(): void {
             try {
-                this.syncServiceWorker = new Worker('/scripts/cc.idb.ww.js');
+                this.syncServiceWorker = new Worker('/Scripts/cc.idb.ww.js');
 
                 this.syncServiceWorker.onmessage = (e: MessageEvent) => {
                     console.log('UI.onMessage', e);

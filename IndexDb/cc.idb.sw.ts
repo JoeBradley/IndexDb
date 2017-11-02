@@ -9,31 +9,32 @@ var cacheName: string = 'contactManager-v1';
 var filesToCache: Array<string> = [
     '/',
     'index.html',
-
-    'scripts/require.js',
-    
-    'scripts/r.js',
-    'scripts/dexie/dexie.js',
-    'scripts/jquery/jquery-3.2.1.js',
-
     'cc.idb.main.js',
+
+    'Scripts/require.js',    
+    'Scripts/dexie/dexie.js',
+    'Scripts/jquery/jquery-3.2.1.js',
+    
     'Scripts/cc.idb.app.js',
     'Scripts/cc.idb.dbcontext.js',
     'Scripts/cc.idb.startup.js',
     'Scripts/cc.idb.syncService.js',
     'Scripts/cc.idb.ww.js',
     'Scripts/models/cc.idb.model.js',
+    'Scripts/typings/dexie/dexie.js',
+    
+
 
     'Content/styles.css',
 
+    'Images/loading.gif',
+    'Images/ic_add_white_24px.svg',
+    'Images/ic_refresh_white_24px.svg',
     'Images/icons/monkey_32.png',
     'Images/icons/monkey_128.png',
     'images/icons/monkey_144.png',
     'Images/Profiles/Chris.jpg',
-    'Images/profiles/Anna.jpg',
-    'Images/loading.gif',
-    'Images/ic_add_white_24px.svg',
-    'Images/ic_refresh_white_24px.svg'
+    'Images/Profiles/Anna.jpg'    
 ];
 
 self.addEventListener('install', function (e: any) {
@@ -97,11 +98,11 @@ self.addEventListener('fetch', function (e: any) {
                 .match(e.request)
                 .then(function(response) {
                     if (response) {
-                        console.log('[ServiceWorker] Returning cached data for request', e.request.url);
+                        //console.log('[ServiceWorker] Returning cached data for request', e.request.url);
                         return response;
                     }
 
-                    console.warn('[ServiceWorker] No cahced data for request', e.request.url);
+                    console.warn('[ServiceWorker] No cached data for request', e.request.url);
 
                     return fetch(e.request);
                 }, (reason) => { console.error('Cache fetch failed', reason); })
